@@ -3,9 +3,13 @@ pipeline{
     agent  {
         label 'AGENT-1' // this specifies that the pipeline should run on any available agent that has the label 'AGENT-1', this allows for flexibility in choosing where the pipeline will execute, as it can run on any node that is part of the Jenkins environment, whether it's a master or a slave node, as long as it has the specified label.
     } 
-    //environment { // use this section to define environment variables that can be used throughout the pipeline, this is useful for storing values that are commonly used in multiple stages or steps, such as the name of the course or the version of the application being built.
-    //     COURSE = 'jenkins' // Define environment variables for the pipeline, in this case we are defining a variable named COURSE with the value 'jenkins', this variable can be accessed and used throughout the pipeline execution, for example in shell commands or in other stages, it allows for better maintainability and readability of the pipeline by centralizing the definition of commonly used values.
-    // }
+    environment { // use this section to define environment variables that can be used throughout the pipeline, this is useful for storing values that are commonly used in multiple stages or steps, such as the name of the course or the version of the application being built.
+        appVersion = '' //empty variable to store the application version, this variable will be populated in the Build stage by reading the version from the package.json file, and it can be used in subsequent stages for tasks such as tagging Docker images or deploying specific versions of the application.
+        REGION = "us-east-1"
+        ACC_ID = "315069654700"
+        PROJECT = "roboshop"
+        COMPONENT = "catalogue" 
+         }
 
     options { // Define options for the pipeline, these options include setting a timeout for the pipeline execution to prevent it from running indefinitely and disabling concurrent builds to ensure that only one instance of the pipeline runs at a time, which can help avoid conflicts and resource contention.
         timeout(time: 30, unit: 'MINUTES')  // this option sets a timeout for the pipeline execution, if the pipeline takes longer than the specified time (30 minutes in this case), it will be automatically aborted to prevent it from running indefinitely and consuming resources unnecessarily.
@@ -21,16 +25,13 @@ pipeline{
 
     // Build the application
     stages {
-        stage('Build') {
+        stage('Read package.json') {
             steps {
-                script{ // Define the steps to execute in the Build stage, in this case we are using a script block to execute some shell commands, we are printing a message to indicate that we are building, then we are sleeping for 10 seconds to simulate a build process, after that we are printing the environment variables using the env command and finally we are printing a personalized message using the input parameter PERSON.
-                           // the script block allows us to write arbitrary Groovy code, which can be useful for more complex logic or when we want to use variables and control structures that are not available in the declarative syntax. In this case, we are using it to execute a series of shell commands that simulate a build process and print some information about the environment and the input parameters.
-                    sh """  
-                        echo "Hello Build" 
-                        env 
-                    """
+                script {
+                    def packageJson = readJSON file: 'package.json'
+                    appVersion = packageJson.version
+                    echo "Package version: ${appVersion}"
                 }
-                
             }
         }
         stage('Test') {
