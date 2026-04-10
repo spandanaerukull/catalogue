@@ -34,6 +34,15 @@ pipeline{
                 }
             }
         }
+        stage('Install Dependencies') {
+            steps {
+                script {
+                   sh """
+                        npm install
+                   """
+                }
+            }
+        }
         stage('Test') {
             steps {
                 script{ // Define the steps to execute in the Test stage, in this case we are using a script block to execute some shell commands, we are printing a message to indicate that we are running tests, then we are sleeping for 5 seconds to simulate a test process, after that we are printing the environment variables using the env command and finally we are printing a personalized message using the input parameter PERSON.
