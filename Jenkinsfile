@@ -34,7 +34,7 @@ pipeline{
                 }
             }
         }
-        stage('Install Dependencies') {
+         stage('Install Dependencies') {
             steps {
                 script {
                    sh """
@@ -42,7 +42,7 @@ pipeline{
                    """
                 }
             }
-
+        }
             stage('Docker Build') {
             steps {
                 script {
@@ -80,5 +80,5 @@ pipeline{
     
 
 }
+ 
 
-}
