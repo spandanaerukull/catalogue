@@ -44,7 +44,7 @@ pipeline{
             }
         }
 
-        stage('Unit Testing') {
+        stage('Unit Testing') { // Define the Unit Testing stage, this stage includes steps to run unit tests for the application, in this case we are using a script block to execute a shell command that simulates running unit tests by printing a message to the console. In a real-world scenario, this stage would typically include commands to run actual unit tests using a testing framework such as Jest, Mocha, or JUnit, and it would also include steps to collect and publish test results for better visibility and reporting.
             steps {
                 script {
                    sh """
@@ -53,10 +53,10 @@ pipeline{
                 }
             }
         }
-            stage('Docker Build') {
+            stage('Docker Build') { // Define the Docker Build stage, this stage includes steps to authenticate with Amazon ECR using the AWS CLI, build a Docker image using the Dockerfile in the current directory, and push the image to an Amazon ECR repository. The image is tagged with the application version that was read from the package.json file in the previous stage, allowing for versioned Docker images to be stored in ECR.
             steps {
                 script {
-                    withAWS(credentials: 'aws-creds', region: 'us-east-1') {
+                    withAWS(credentials: 'aws-creds', region: 'us-east-1') { // this block allows us to execute AWS CLI commands using the specified credentials and region, it is useful for tasks such as authenticating with AWS services, managing resources, or in this case, building and pushing Docker images to Amazon ECR. By wrapping the Docker build and push commands within the withAWS block, we ensure that the necessary AWS credentials are available for authentication when interacting with ECR.
                         sh """
                             aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com
                             docker build -t ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion} .
