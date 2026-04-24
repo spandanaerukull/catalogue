@@ -6,7 +6,7 @@ pipeline{
     environment { // use this section to define environment variables that can be used throughout the pipeline, this is useful for storing values that are commonly used in multiple stages or steps, such as the name of the course or the version of the application being built.
         appVersion = '' //empty variable to store the application version, this variable will be populated in the Build stage by reading the version from the package.json file, and it can be used in subsequent stages for tasks such as tagging Docker images or deploying specific versions of the application.
         REGION = "us-east-1"
-        ACC_ID = "315069654700"
+        ACC_ID = "122610517295"
         PROJECT = "roboshop"
         COMPONENT = "catalogue" 
          }
