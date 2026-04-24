@@ -59,7 +59,7 @@ pipeline{
                     withAWS(credentials: 'aws-creds', region: 'us-east-1') { // this block allows us to execute AWS CLI commands using the specified credentials and region, it is useful for tasks such as authenticating with AWS services, managing resources, or in this case, building and pushing Docker images to Amazon ECR. By wrapping the Docker build and push commands within the withAWS block, we ensure that the necessary AWS credentials are available for authentication when interacting with ECR.
                         sh """
                             aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com
-                            docker build -t ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion} .
+                            docker build -t ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion} .           
                             docker push ${ACC_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion}
                         """
                     }
